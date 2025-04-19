@@ -1,0 +1,40 @@
+body {
+  font-family: Arial, sans-serif;
+  background: #f5f7fa;
+  color: #333;
+  padding: 20px;
+}
+.container {
+  max-width: 600px;
+  margin: auto;
+}
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+select,
+button {
+  padding: 10px;
+  font-size: 16px;
+}
+.signalBox {
+  margin-top: 15px;
+  background: #eef;
+  padding: 15px;
+  font-weight: bold;
+  font-size: 18px;
+  border: 2px solid #bbd;
+}
+.tickData {
+  margin-top: 15px;
+  background: #fff;
+  border: 1px solid #ccc;
+  padding: 10px;
+  font-family: monospace;
+}
