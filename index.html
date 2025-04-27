@@ -1,160 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head><link rel="stylesheet" href="style.css" /> <head
-
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Deriv Rise/Fall Signal Tool</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 20px;
-        background-color: #f2f2f2;
-      }
-      .container {
-        max-width: 800px;
-        margin: auto;
-        background: #fff;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      }
-      h1 {
-        text-align: center;
-      }
-      select,
-      button {
-        padding: 10px;
-        margin: 10px 0;
-        width: 100%;
-      }
-      #signal-box {
-        padding: 15px;
-        margin-top: 15px;
-        text-align: center;
-        font-size: 1.2em;
-        background-color: #e8f4e5;
-        border: 2px solid #b2d8b2;
-        border-radius: 5px;
-      }
-      #tick-box {
-        font-size: 0.9em;
-        color: #555;
-        margin-top: 10px;
-      }
-    </style>
+    <title>Deriv Analysis Tool</title>
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <div class="container">
-      <h1>Rise/Fall Signal Analysis Tool</h1>
-      <label>Select Market:</label>
-      <select id="market-select">
-        <option value="R_10">Volatility 10</option>
-        <option value="R_25">Volatility 25</option>
-        <option value="R_50">Volatility 50</option>
-        <option value="R_75">Volatility 75</option>
-        <option value="R_100">Volatility 100</option>
-        <option value="R_10_1HZ">Volatility 10 (1s)</option>
-        <option value="R_25_1HZ">Volatility 25 (1s)</option>
-        <option value="R_50_1HZ">Volatility 50 (1s)</option>
-        <option value="R_75_1HZ">Volatility 75 (1s)</option>
-        <option value="R_100_1HZ">Volatility 100 (1s)</option>
-      </select>
+      <!-- Header -->
+      <header>
+        <h1>Deriv Market Prediction Tool</h1>
+      </header>
 
-      <label>Select Timeframe:</label>
-      <select id="timeframe-select">
-        <option value="1t">1 Tick</option>
-        <option value="2t">2 Ticks</option>
-        <option value="3t">3 Ticks</option>
-        <option value="15s">15 Seconds</option>
-        <option value="30s">30 Seconds</option>
-        <option value="1m">1 Minute</option>
-        <option value="2m">2 Minutes</option>
-      </select>
+      <!-- Dashboard and Chart Section -->
+      <div class="dashboard">
+        <!-- Market Selection Panel -->
+        <div class="panel">
+          <label for="market">Select Market</label>
+          <select id="market">
+            <option value="R_10">Volatility 10</option>
+            <option value="R_25">Volatility 25</option>
+            <option value="R_50">Volatility 50</option>
+            <option value="R_75">Volatility 75</option>
+            <option value="R_100">Volatility 100</option>
+            <option value="R_10_1HZ">Volatility 10 (1s)</option>
+            <option value="R_25_1HZ">Volatility 25 (1s)</option>
+            <option value="R_50_1HZ">Volatility 50 (1s)</option>
+            <option value="R_75_1HZ">Volatility 75 (1s)</option>
+            <option value="R_100_1HZ">Volatility 100 (1s)</option>
+          </select>
 
-      <button id="analyze-btn">Press to Analyze</button>
+          <label for="tradeType">Trade Type</label>
+          <select id="tradeType">
+            <option value="even_odd">Even/Odd</option>
+            <option value="over_under">Over/Under</option>
+            <option value="rise_fall">Rise/Fall</option>
+          </select>
 
-      <div id="signal-box">Signals will appear here...</div>
-      <div id="tick-box"></div>
-      <pre id="tick-data" style="background:#111; color:#0f0; padding:10px; margin-top:10px; border-radius:8px; font-size:14px;">Tick data will appear here...</pre>
+          <button id="analyzeBtn">Analyze</button>
 
+          <div id="tickCount">Ticks: 0</div>
+          <div id="evenOddPercent">Even: 0% | Odd: 0%</div>
+        </div>
 
-    <script>
-      const API_TOKEN = "Joy0a1k0EwqEtPA";
-      const socket = new WebSocket(
-        `wss://ws.binaryws.com/websockets/v3?app_id=1089&token=${API_TOKEN}`
-      );
+        <!-- Analysis Tool -->
+        <div class="analysis">
+          <div id="signalBox">No signal yet</div>
+          <div class="last-box">
+            <h4>Last Digits</h4>
+            <div id="lastDigitsBox"></div>
+          </div>
+          <div class="vowel-box">
+            <h4>Vowel Pattern (E/O)</h4>
+            <div id="vowelBox"></div>
+          </div>
+        </div>
 
-      const analyzeButton = document.getElementById("analyze-btn");
-      const marketDropdown = document.getElementById("market-select");
-      const timeframeDropdown = document.getElementById("timeframe-select");
-      const signalBox = document.getElementById("signal-box");
-      const tickBox = document.getElementById("tick-box");
+        <!-- Candlestick Chart -->
+        <div class="chart-box">
+          <h4>Live Market Chart</h4>
+          <iframe
+            id="chart"
+            src="https://charts.binary.com/?l=EN&market=R_100&theme=light"
+            width="100%"
+            height="300"
+            frameborder="0"
+          ></iframe>
+        </div>
+      </div>
+    </div>
 
-      let tickHistory = [];
-
-      socket.onopen = () => {
-        console.log("Connected to Deriv API");
-      };
-
-      socket.onerror = (error) => {
-        signalBox.innerText =
-          "Connection Error. Please check your API token or network.";
-      };
-
-      analyzeButton.addEventListener("click", () => {
-        tickHistory = [];
-        const selectedMarket = marketDropdown.value;
-
-        socket.send(
-          JSON.stringify({
-            ticks: selectedMarket,
-            subscribe: 1,
-          })
-        );
-
-        signalBox.innerText = "Analyzing... Waiting for market data...";
-      });
-
-      socket.onmessage = function (event) {
-        const data = JSON.parse(event.data);
-        if (data.tick) {
-          const digit = Number(data.tick.quote.toString().slice(-1));
-          tickHistory.push(digit);
-
-          if (tickHistory.length > 20) {
-            tickHistory.shift();
-          }
-
-          tickBox.innerText = "Last Digits: " + tickHistory.join(" ");
-
-          if (tickHistory.length >= 15) {
-            analyzeSignal();
-          }
-        }
-      };
-
-      function analyzeSignal() {
-        let evenCount = tickHistory.filter((d) => d % 2 === 0).length;
-        let oddCount = tickHistory.length - evenCount;
-        let confidence = 0;
-        let signal = "";
-
-        if (evenCount >= 11) {
-          signal = "Trade Fall";
-          confidence = Math.round((evenCount / tickHistory.length) * 100);
-        } else if (oddCount >= 11) {
-          signal = "Trade Rise";
-          confidence = Math.round((oddCount / tickHistory.length) * 100);
-        } else {
-          signalBox.innerText = "Wait for clear signal...";
-          return;
-        }
-
-        signalBox.innerText = `${signal} – ${confidence}% Confidence`;
-      }
-    </script>
     <script src="script.js"></script>
   </body>
 </html>

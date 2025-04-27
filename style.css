@@ -1,0 +1,125 @@
+/* General Reset and Base Styles */
+body {
+  margin: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: white;
+  color: #333;
+}
+
+.container {
+  border: 5px solid #007bff; /* Blue edges */
+  padding: 10px;
+  max-width: 1200px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 12px;
+}
+
+/* Header */
+header {
+  background-color: #007bff;
+  color: white;
+  text-align: center;
+  padding: 20px 0;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 1.8rem;
+}
+
+/* Layout Containers */
+.dashboard {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 15px;
+}
+
+/* Panel */
+.panel {
+  background-color: #e6f0ff;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+}
+
+.panel label,
+.panel select,
+.panel button {
+  display: block;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+.panel button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.panel button:hover {
+  background-color: #0056b3;
+}
+
+/* Analysis Section */
+.analysis {
+  background-color: #fff9e6;
+  padding: 15px;
+  border-radius: 10px;
+  border: 2px solid gold;
+}
+
+#signalBox {
+  background-color: #fce8b2;
+  color: #000;
+  font-weight: bold;
+  text-align: center;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  border: 2px solid gold;
+}
+
+.last-box,
+.vowel-box {
+  margin-top: 10px;
+}
+
+#lastDigitsBox,
+#vowelBox {
+  background-color: #fff8dc;
+  padding: 10px;
+  border: 1px solid #ccc;
+  min-height: 50px;
+  border-radius: 6px;
+  font-size: 1.2rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+/* Chart */
+.chart-box {
+  padding: 10px;
+  background: #f0f0f0;
+  border-radius: 10px;
+  border: 2px solid #007bff;
+  height: fit-content;
+}
+
+.chart-box h4 {
+  margin-bottom: 10px;
+  color: #007bff;
+}
+
+/* Responsive */
+@media screen and (max-width: 960px) {
+  .dashboard {
+    grid-template-columns: 1fr;
+  }
+}
